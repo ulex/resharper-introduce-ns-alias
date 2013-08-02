@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>IntoroduceNsAlias</id>
+    <version>$version$</version>
+    <title>Introduce namespace alias refactoring plugin</title>
+    <authors>Alexander Ulitin</authors>
+    <description>This is plugin for ReSharper which can introduce namespace alias</description>
+  <dependencies>
+    <dependency id="ReSharper" version="8.0" />
+  </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\*.dll" target="ReSharper\vAny\plugins" />
+  </files>
+</package>
