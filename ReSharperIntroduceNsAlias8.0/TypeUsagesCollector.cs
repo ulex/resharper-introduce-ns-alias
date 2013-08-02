@@ -39,8 +39,8 @@ namespace IntroduceNsAlias
         {
             //if (this.myRegionDetector.InGeneratedCode)
             //    return;
-            foreach (IQualifiableReference qualifiableReference in
-                element.GetFirstClassReferences().OfType<IQualifiableReference>())
+            foreach (IQualifiableReferenceBase qualifiableReference in
+                element.GetFirstClassReferences().OfType<IQualifiableReferenceBase>())
             {
                 if ((qualifiableReference).GetDocumentRange().ContainedIn(myRange))
                 {

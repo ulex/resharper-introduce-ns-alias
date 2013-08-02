@@ -98,7 +98,7 @@ namespace IntroduceNsAlias
                     methodName = asMethod.ShortName;
                 }
 
-                if ((astypeElement != null || (asMethod != null && asMethod.IsStatic)) && containedns == importedNs.QualifiedName)
+                if (((astypeElement != null && !(bindedResult is IPredefinedTypeReference)) || (asMethod != null && asMethod.IsStatic)) && containedns == importedNs.QualifiedName)
                 {
                      var list = new List<string> { _suggestedName };
                     foreach (var typeParameterNumber in clrName.TypeNames)
@@ -126,7 +126,7 @@ namespace IntroduceNsAlias
                 null,
                 replacedNodes.ToArray(),
                 new NameSuggestionsExpression(new[] { _suggestedName }),
-                PsiManager.GetInstance(Solution));
+                PsiExtensions.GetPsiServices(Solution).Files);
         }
 
         private static void CallExtensionMethodsAsStatic(IFile file, INamespace importedNs, CSharpElementFactory factory)
@@ -148,7 +148,7 @@ namespace IntroduceNsAlias
                            .IfNotNull(t => t.GetContainingNamespace())
                            .IfNotNull(ns => ns.QualifiedName);
 
-                if (imethod != null && method.IsExtensionMethod() && containingNsQualifiedName == importedNs.QualifiedName)
+                if (method != null && method.IsExtensionMethod() && containingNsQualifiedName == importedNs.QualifiedName)
                 {
                     var invocate = InvocationExpressionNavigator.GetByInvokedExpression(method);
                     //if (invocate == null) return null;

@@ -29,16 +29,16 @@ namespace IntroduceNsAlias
         {
             if (element is ITypeUsage || element is IUserDeclaredTypeUsage)
             {
-                _referenced.AddRange(element.LastChild.GetFirstClassReferences().OfType<IQualifiableReference>());
+                _referenced.AddRange(element.LastChild.GetFirstClassReferences().OfType<IReference>());
             }
             else if (element is IInvocationExpression)
             {
                 var expr = (element as IInvocationExpression).InvokedExpression;
-                _referenced.AddRange(expr.GetFirstClassReferences().OfType<IQualifiableReference>());
+                _referenced.AddRange(expr.GetFirstClassReferences().OfType<IReference>());
             }
             else if (element is IAttribute)
             {
-                _referenced.AddRange((element as IAttribute).Name.GetFirstClassReferences().OfType<IQualifiableReference>());
+                _referenced.AddRange((element as IAttribute).Name.GetFirstClassReferences().OfType<IReference>());
             }
         }
 
