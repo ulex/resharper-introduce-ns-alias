@@ -1,16 +1,21 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>IntoroduceNsAlias</id>
+    <id>IntroduceNsAlias</id>
     <version>$version$</version>
-    <title>Introduce namespace alias refactoring plugin</title>
+    <title>Introduce C# namespace alias refactoring plugin</title>
     <authors>Alexander Ulitin</authors>
-    <description>This is plugin for ReSharper which can introduce namespace alias</description>
-  <dependencies>
-    <dependency id="ReSharper" version="8.0" />
-  </dependencies>
+    <description>This is plugin for ReSharper which can introduce namespace alias in C#</description>
+    <copyright>Alexander Ulitin</copyright>
+    <tags>Refactoring Namespace Alias </tags>
+    <projectUrl>https://raw.github.com/ulex/IntroduceNsAlias</projectUrl>
+    <iconUrl>https://raw.github.com/ulex/IntroduceNsAlias/master/icon.png</iconUrl>
+    <dependencies>
+      <dependency id="ReSharper" version="8.0"/>
+    </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\*.dll" target="ReSharper\vAny\plugins" />
+    <file src="bin\Release\*.dll" target="ReSharper\vAny\plugins"/>
+    <file src="bin\Release\*.pdb" target="ReSharper\vAny\plugins"/>
   </files>
 </package>
