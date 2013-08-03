@@ -10,16 +10,16 @@ namespace IntroduceNsAlias
 {
     internal sealed class TypeUsagesCollector : IRecursiveElementProcessor
     {
-        private readonly IFile myFile;
+        private readonly ITreeNode _myFile;
 
-        private readonly DocumentRange myRange;
+        private readonly DocumentRange _myRange;
 
-        private readonly List<IReference> myReferences = new List<IReference>();
+        private readonly List<IReference> _myReferences = new List<IReference>();
 
-        public TypeUsagesCollector(IFile file, DocumentRange range)
+        public TypeUsagesCollector(ITreeNode file, DocumentRange range)
         {
-            myFile = file;
-            myRange = range;
+            _myFile = file;
+            _myRange = range;
         }
 
         public bool ProcessingIsFinished
@@ -37,27 +37,24 @@ namespace IntroduceNsAlias
 
         public void ProcessAfterInterior(ITreeNode element)
         {
-            //if (this.myRegionDetector.InGeneratedCode)
-            //    return;
             foreach (IQualifiableReferenceBase qualifiableReference in
                 element.GetFirstClassReferences().OfType<IQualifiableReferenceBase>())
             {
-                if ((qualifiableReference).GetDocumentRange().ContainedIn(myRange))
+                if ((qualifiableReference).GetDocumentRange().ContainedIn(_myRange))
                 {
-                    myReferences.Add(qualifiableReference);
+                    _myReferences.Add(qualifiableReference);
                 }
             }
         }
 
         public void ProcessBeforeInterior(ITreeNode element)
         {
-            //this.myRegionDetector.Process(element);
         }
 
         public IEnumerable<IReference> Run()
         {
-            myFile.ProcessDescendantsForResolve(this);
-            return myReferences;
+            _myFile.ProcessDescendantsForResolve(this);
+            return _myReferences;
         }
     }
 }

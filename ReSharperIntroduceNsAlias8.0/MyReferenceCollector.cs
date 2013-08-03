@@ -12,7 +12,7 @@ namespace IntroduceNsAlias
     {
         private readonly List<IReference> _referenced = new List<IReference>();
 
-        public IEnumerable<IReference> Referenced
+        public IList<IReference> Referenced
         {
             get
             {
@@ -22,23 +22,18 @@ namespace IntroduceNsAlias
 
         public bool InteriorShouldBeProcessed(ITreeNode element)
         {
+            //if (element is IReferenceName || element is IReferenceExpression)
+            //{
+            //    return false;
+            //}
             return true;
         }
 
         public void ProcessBeforeInterior(ITreeNode element)
         {
-            if (element is ITypeUsage || element is IUserDeclaredTypeUsage)
+            if (element is IReferenceName || element is IReferenceExpression)
             {
-                _referenced.AddRange(element.LastChild.GetFirstClassReferences().OfType<IReference>());
-            }
-            else if (element is IInvocationExpression)
-            {
-                var expr = (element as IInvocationExpression).InvokedExpression;
-                _referenced.AddRange(expr.GetFirstClassReferences().OfType<IReference>());
-            }
-            else if (element is IAttribute)
-            {
-                _referenced.AddRange((element as IAttribute).Name.GetFirstClassReferences().OfType<IReference>());
+                _referenced.AddRange(element.GetFirstClassReferences().OfType<IReference>());
             }
         }
 

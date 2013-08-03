@@ -8,12 +8,13 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Refactorings.IntroduceVariable;
 using JetBrains.ReSharper.Refactorings.Workflow;
 
 using System.Linq;
-
+using JetBrains.Util;
 using JetBrains.Util.Special;
 
 namespace IntroduceNsAlias
@@ -21,8 +22,6 @@ namespace IntroduceNsAlias
     public class IntoduceNsAliasRefactoring : IntroduceLocalRefactoring
     {
         private readonly IntoduceNsAliasWorkflow _workFlow;
-
-        private readonly ISolution _solution;
 
         private string _suggestedName;
 
@@ -40,48 +39,51 @@ namespace IntroduceNsAlias
         protected override ReplaceInfo CreateReplaceInfo()
         {
             var usingDirective = _workFlow.ImportedNamespacePointer.GetTreeNode();
-
             if (usingDirective == null) return null;
-
             var importedNs = usingDirective.ImportedNamespace;
             if (importedNs == null) return null;
-
             _suggestedName = CamelCaseSelector.GetCamelCaseSuggestion(importedNs.QualifiedName);
-
             var factory = CSharpElementFactory.GetInstance(usingDirective.GetPsiModule());
 
-
-            // replace using of extension methods
-            var refname = usingDirective.Children<IReferenceName>().SingleOrDefault();
-            var selectedName = importedNs.QualifiedName;
-
-            var file = usingDirective.Root() as IFile;
-            if (file == null) return null;
-
-            CallExtensionMethodsAsStatic(file, importedNs, factory);
+            var scope = usingDirective.FindParent<ITypeAndNamespaceHolderDeclaration>();
+            if (scope == null) return null;
+            
+            CallExtensionMethodsAsStatic(scope, importedNs, factory);
 
             var replacedNodes = new List<ITreeNode>();
 
             var myReferenceCollector = new MyReferenceCollector();
-            file.ProcessDescendantsForResolve(myReferenceCollector);
-            var referencesTypesReplace = myReferenceCollector.Referenced;
+            scope.ProcessDescendantsForResolve(myReferenceCollector);
 
             // Add alias to namespace
             var newchild = factory.CreateUsingDirective("$0 = $1", _suggestedName, importedNs.QualifiedName);
-            //ModificationUtil(usingDirective.Parent, newchild);
             newchild = ModificationUtil.AddChildAfter(usingDirective, newchild);
+            
             replacedNodes.Add((newchild as IUsingAliasDirective).Alias);
 
-            // Modify call
+            AppendUsages(myReferenceCollector.Referenced, importedNs, replacedNodes);
 
-            foreach (var bindedResult in referencesTypesReplace)
+            // delete old using
+            ModificationUtil.DeleteChild(usingDirective);
+
+            return new ReplaceInfo(
+                null,
+                null,
+                replacedNodes.ToArray(),
+                new NameSuggestionsExpression(new[] { _suggestedName }),
+                Solution.GetPsiServices().Files);
+        }
+
+        private void AppendUsages(IList<IReference> referencesTypesReplace, INamespace importedNs, List<ITreeNode> replacedNodes)
+        {
+            for (int index = 0; index < referencesTypesReplace.Count; index++)
             {
-                //var type = bindedResult.GetTreeNode();
-                //if (type == null) continue;
+                var bindedResult = referencesTypesReplace[index];
+                if (!bindedResult.IsValid()) continue;
                 var declaredElement = bindedResult.Resolve().DeclaredElement;
 
                 var astypeElement = declaredElement as ITypeElement;
-                var asMethod = declaredElement as IMethod;
+                var asTypeMember = declaredElement as ITypeMember;
                 IClrTypeName clrName = null;
                 string containedns = null;
                 string methodName = null;
@@ -90,19 +92,23 @@ namespace IntroduceNsAlias
                     clrName = astypeElement.GetClrName();
                     containedns = astypeElement.GetContainingNamespace().QualifiedName;
                 }
-                else if (asMethod != null)
+                else if (asTypeMember != null)
                 {
-                    var containingType = asMethod.GetContainingType();
+                    var containingType = asTypeMember.GetContainingType();
                     clrName = containingType.GetClrName();
                     containedns = containingType.GetContainingNamespace().QualifiedName;
-                    methodName = asMethod.ShortName;
+                    methodName = asTypeMember.ShortName;
                 }
 
-                if (((astypeElement != null && !(bindedResult is IPredefinedTypeReference)) || (asMethod != null && asMethod.IsStatic)) && containedns == importedNs.QualifiedName)
+                if (((astypeElement != null && !(bindedResult is IPredefinedTypeReference)) ||
+                     (asTypeMember != null && asTypeMember.IsStatic))
+                    && containedns == importedNs.QualifiedName)
                 {
-                     var list = new List<string> { _suggestedName };
+                    var list = new List<string> {_suggestedName};
                     foreach (var typeParameterNumber in clrName.TypeNames)
+                    {
                         list.Add(CSharpImplUtil.MakeSafeName(typeParameterNumber.TypeName));
+                    }
 
                     if (methodName != null)
                     {
@@ -118,20 +124,11 @@ namespace IntroduceNsAlias
                     replacedNodes.Add(firstChild);
                 }
             }
-
-            ModificationUtil.DeleteChild(usingDirective);
-
-            return new ReplaceInfo(
-                null,
-                null,
-                replacedNodes.ToArray(),
-                new NameSuggestionsExpression(new[] { _suggestedName }),
-                PsiExtensions.GetPsiServices(Solution).Files);
         }
 
-        private static void CallExtensionMethodsAsStatic(IFile file, INamespace importedNs, CSharpElementFactory factory)
+        private static void CallExtensionMethodsAsStatic(ITreeNode node, INamespace importedNs, CSharpElementFactory factory)
         {
-            var targetsCollector = new TypeUsagesCollector(file, file.GetDocumentRange());
+            var targetsCollector = new TypeUsagesCollector(node, node.GetDocumentRange());
             var references = targetsCollector.Run();
             foreach (var reference in references)
             {
