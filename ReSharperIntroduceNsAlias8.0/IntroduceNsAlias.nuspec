@@ -8,7 +8,7 @@
     <description>This is plugin for ReSharper which can introduce namespace alias in C#</description>
     <copyright>Alexander Ulitin</copyright>
     <tags>Refactoring Namespace Alias </tags>
-    <projectUrl>https://raw.github.com/ulex/IntroduceNsAlias</projectUrl>
+    <projectUrl>https://github.com/ulex/IntroduceNsAlias</projectUrl>
     <iconUrl>https://raw.github.com/ulex/IntroduceNsAlias/master/icon.png</iconUrl>
     <dependencies>
       <dependency id="ReSharper" version="8.0"/>

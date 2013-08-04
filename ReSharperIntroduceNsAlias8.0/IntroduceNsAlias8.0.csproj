@@ -60,7 +60,7 @@
   <PropertyGroup>
     <PostBuildEvent>IF $(ConfigurationName)==DEBUG goto exit
 pushd $(ProjectDir)
-powershell.exe -ExecutionPolicy ByPass  -File  ".\buildNuPack.ps1" 2&gt; alog.txt
+powershell.exe -ExecutionPolicy ByPass  -File  ".\buildNuPack.ps1"
 :exit</PostBuildEvent>
   </PropertyGroup>
 </Project>
