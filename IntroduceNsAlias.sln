@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntroduceNsAlias7.1", "ReSh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntroduceNsAlias8.0", "ReSharperIntroduceNsAlias8.0\IntroduceNsAlias8.0.csproj", "{94680DC2-5A26-4779-A433-DF01AF5D8BB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntroduceNsAlias8.1", "ReSharperIntroduceNsAlias8.0\IntroduceNsAlias8.1.csproj", "{D7DC159D-29C4-493F-9FFC-60F2DF8CFCB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{94680DC2-5A26-4779-A433-DF01AF5D8BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94680DC2-5A26-4779-A433-DF01AF5D8BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94680DC2-5A26-4779-A433-DF01AF5D8BB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7DC159D-29C4-493F-9FFC-60F2DF8CFCB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7DC159D-29C4-493F-9FFC-60F2DF8CFCB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7DC159D-29C4-493F-9FFC-60F2DF8CFCB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7DC159D-29C4-493F-9FFC-60F2DF8CFCB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

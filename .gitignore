@@ -29,3 +29,5 @@ _ReSharper*/
 $tf*/
 *.nupkg
 *.sdf
+packages/*
+!packages/repositories.config
