@@ -1,7 +1,7 @@
 ﻿pushd $args[0]
 
 $nuspec = ".\IntroduceNsAlias.nuspec"
-$version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((gi .\bin\Release\IntroduceNsAlias.dll).FullName)
+$version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((gi .\bin\Release\IntroduceNsAlias.8.0.dll).FullName)
 $xml = [xml] (gc $nuspec)
 $node = $xml.SelectSingleNode("package/metadata/version").InnerText = $version.ProductVersion
 

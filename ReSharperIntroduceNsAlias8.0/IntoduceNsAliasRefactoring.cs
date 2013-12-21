@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using JetBrains.Application;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.Hotspots;
 using JetBrains.ReSharper.Feature.Services.Refactorings;
@@ -55,16 +55,19 @@ namespace IntroduceNsAlias
             var myReferenceCollector = new MyReferenceCollector();
             scope.ProcessDescendantsForResolve(myReferenceCollector);
 
-            // Add alias to namespace
-            var newchild = factory.CreateUsingDirective("$0 = $1", _suggestedName, importedNs.QualifiedName);
-            newchild = ModificationUtil.AddChildAfter(usingDirective, newchild);
+            using (WriteLockCookie.Create())
+            {
+                // Add alias to namespace
+                var newchild = factory.CreateUsingDirective("$0 = $1", _suggestedName, importedNs.QualifiedName);
+                newchild = ModificationUtil.AddChildAfter(usingDirective, newchild);
             
-            replacedNodes.Add((newchild as IUsingAliasDirective).Alias);
+                replacedNodes.Add((newchild as IUsingAliasDirective).Alias);
 
-            AppendUsages(myReferenceCollector.Referenced, importedNs, replacedNodes);
+                AppendUsages(myReferenceCollector.Referenced, importedNs, replacedNodes);
 
-            // delete old using
-            ModificationUtil.DeleteChild(usingDirective);
+                // delete old using
+                ModificationUtil.DeleteChild(usingDirective);
+            }
 
             return new ReplaceInfo(
                 null,
