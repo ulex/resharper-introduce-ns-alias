@@ -1,11 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntroduceNsAlias7.1", "ReSharperIntroduceNsAlias7.1\IntroduceNsAlias7.1.csproj", "{CCB042EA-49B2-4481-AB44-35261073E47C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntroduceNsAlias8.0", "ReSharperIntroduceNsAlias8.0\IntroduceNsAlias8.0.csproj", "{94680DC2-5A26-4779-A433-DF01AF5D8BB1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntroduceNsAlias8.1", "ReSharperIntroduceNsAlias8.0\IntroduceNsAlias8.1.csproj", "{D7DC159D-29C4-493F-9FFC-60F2DF8CFCB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuPackage", "ReSharperIntroduceNsAlias8.0\NuPackage.csproj", "{31E8D05B-6DE6-4853-AFE2-2451C414A38B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{D7DC159D-29C4-493F-9FFC-60F2DF8CFCB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7DC159D-29C4-493F-9FFC-60F2DF8CFCB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7DC159D-29C4-493F-9FFC-60F2DF8CFCB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31E8D05B-6DE6-4853-AFE2-2451C414A38B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31E8D05B-6DE6-4853-AFE2-2451C414A38B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31E8D05B-6DE6-4853-AFE2-2451C414A38B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31E8D05B-6DE6-4853-AFE2-2451C414A38B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

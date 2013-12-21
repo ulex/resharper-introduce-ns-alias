@@ -14,7 +14,7 @@ using JetBrains.ProjectModel.model2.Assemblies;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.2.0.0")]
 //[assembly: AssemblyFileVersion("1.0.5.*")]
 // The following information is displayed by ReSharper in the Plugins dialog
 [assembly: PluginTitle("Introduce Namespace Alias")]
