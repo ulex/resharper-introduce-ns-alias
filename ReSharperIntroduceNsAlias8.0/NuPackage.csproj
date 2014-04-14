@@ -30,10 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ReSharperIntroduceNsAlias7.1\IntroduceNsAlias7.1.csproj">
-      <Project>{ccb042ea-49b2-4481-ab44-35261073e47c}</Project>
-      <Name>IntroduceNsAlias7.1</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ReSharperIntroduceNsAlias8.0\IntroduceNsAlias8.0.csproj">
       <Project>{94680dc2-5a26-4779-a433-df01af5d8bb1}</Project>
       <Name>IntroduceNsAlias8.0</Name>
@@ -42,9 +38,18 @@
       <Project>{d7dc159d-29c4-493f-9ffc-60f2df8cfcb7}</Project>
       <Name>IntroduceNsAlias8.1</Name>
     </ProjectReference>
+    <ProjectReference Include="IntroduceNsAlias8.2.csproj">
+      <Project>{3ac6d3b0-f7ba-4ea0-a91f-677b486365a1}</Project>
+      <Name>IntroduceNsAlias8.2</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="buildNuPack.ps1" />
+    <None Include="IntroduceNsAlias.nuspec" />
+    <None Include="Publish.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

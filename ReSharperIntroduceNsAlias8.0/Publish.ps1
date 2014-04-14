@@ -3,3 +3,4 @@
 #nuget setApiKey <key guid> -Source https://resharper-plugins.jetbrains.com 
 
 nuget push "$package" -Source https://resharper-plugins.jetbrains.com
+pause
