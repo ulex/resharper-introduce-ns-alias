@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using JetBrains.ActionManagement;
 using JetBrains.Application.PluginSupport;
 
@@ -14,8 +14,8 @@ using JetBrains.Application.PluginSupport;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.4.0.4")]
+[assembly: AssemblyFileVersion("1.4.0.4")]
 
 // The following information is displayed by ReSharper in the Plugins dialog
 [assembly: PluginTitle("Introduce Namespace Alias")]

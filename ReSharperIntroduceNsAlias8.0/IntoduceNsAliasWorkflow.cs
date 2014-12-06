@@ -1,4 +1,6 @@
-﻿using JetBrains.Application.DataContext;
+﻿using System;
+
+using JetBrains.Application.DataContext;
 using JetBrains.DocumentManagers;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
@@ -9,8 +11,8 @@ using JetBrains.ReSharper.Psi.Services;
 using JetBrains.ReSharper.Refactorings.IntroduceVariable;
 using JetBrains.ReSharper.Refactorings.Workflow;
 
-using System.Linq;
-
+using JetBrains.ReSharper.Feature.Services.Refactorings;
+using JetBrains.ReSharper.Psi.VB.Impl;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
@@ -20,7 +22,7 @@ namespace IntroduceNsAlias
     {
         private static readonly string[] _ignoredNamespaces = new[] { "System.Linq", "System.Xml.Linq" };
 
-        public ITreeNodePointer<IUsingNamespaceDirective> ImportedNamespacePointer;
+        public IReferenceName ImportedNamespacePointer;
 
         public override string Title
         {
@@ -40,18 +42,18 @@ namespace IntroduceNsAlias
             // check text control
             if (!base.IsAvailable(context))
                 return false;
+            var sourceTokenAtCaret = JetBrains.ReSharper.Feature.Services.Util.TextControlToPsi.GetSourceTokenAtCaret(Solution, TextControl);
 
-            var sourceTokenAtCaret = TextControlToPsi.GetSourceTokenAtCaret(Solution, TextControl);
-            var usingDirective = sourceTokenAtCaret.FindParent<IUsingNamespaceDirective>();
+            var usingDirective = sourceTokenAtCaret.FindParent<IUsingDirective>();
 
-            if (usingDirective == null || usingDirective.ImportedNamespace == null)
+            if (usingDirective == null || usingDirective.ImportedSymbolName == null)
                 return false;
 
             // Does not support Linq
-            if (_ignoredNamespaces.Contains(usingDirective.ImportedNamespace.QualifiedName))
+            if (_ignoredNamespaces.Contains(usingDirective.ImportedSymbolName.QualifiedName, StringComparer.Ordinal))
                 return false;
 
-            ImportedNamespacePointer = usingDirective.CreateTreeElementPointer();
+            ImportedNamespacePointer = usingDirective.ImportedSymbolName;
 
             return true;
         }

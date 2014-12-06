@@ -14,6 +14,9 @@ using JetBrains.ReSharper.Refactorings.IntroduceVariable;
 using JetBrains.ReSharper.Refactorings.Workflow;
 
 using System.Linq;
+
+using JetBrains.Metadata.Reader.API;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.Util;
 using JetBrains.Util.Special;
 
@@ -38,17 +41,15 @@ namespace IntroduceNsAlias
 
         protected override ReplaceInfo CreateReplaceInfo()
         {
-            var usingDirective = _workFlow.ImportedNamespacePointer.GetTreeNode();
+            var usingDirective = _workFlow.ImportedNamespacePointer;
             if (usingDirective == null) return null;
-            var importedNs = usingDirective.ImportedNamespace;
-            if (importedNs == null) return null;
-            _suggestedName = CamelCaseSelector.GetCamelCaseSuggestion(importedNs.QualifiedName);
+            _suggestedName = CamelCaseSelector.GetCamelCaseSuggestion(usingDirective.QualifiedName);
             var factory = CSharpElementFactory.GetInstance(usingDirective.GetPsiModule());
 
             var scope = usingDirective.FindParent<ITypeAndNamespaceHolderDeclaration>();
             if (scope == null) return null;
             
-            CallExtensionMethodsAsStatic(scope, importedNs, factory);
+            CallExtensionMethodsAsStatic(scope, factory, usingDirective.QualifiedName);
 
             var replacedNodes = new List<ITreeNode>();
 
@@ -58,12 +59,12 @@ namespace IntroduceNsAlias
             using (WriteLockCookie.Create())
             {
                 // Add alias to namespace
-                var newchild = factory.CreateUsingDirective("$0 = $1", _suggestedName, importedNs.QualifiedName);
+                var newchild = factory.CreateUsingDirective("$0 = $1", _suggestedName, usingDirective.QualifiedName);
                 newchild = ModificationUtil.AddChildAfter(usingDirective, newchild);
             
                 replacedNodes.Add((newchild as IUsingAliasDirective).Alias);
 
-                AppendUsages(myReferenceCollector.Referenced, importedNs, replacedNodes);
+                AppendUsages(myReferenceCollector.Referenced, replacedNodes, usingDirective.QualifiedName);
 
                 // delete old using
                 ModificationUtil.DeleteChild(usingDirective);
@@ -77,7 +78,7 @@ namespace IntroduceNsAlias
                 Solution.GetPsiServices().Files);
         }
 
-        private void AppendUsages(IList<IReference> referencesTypesReplace, INamespace importedNs, List<ITreeNode> replacedNodes)
+        private void AppendUsages(IList<IReference> referencesTypesReplace, List<ITreeNode> replacedNodes, string qualifiedName)
         {
             for (int index = 0; index < referencesTypesReplace.Count; index++)
             {
@@ -105,7 +106,7 @@ namespace IntroduceNsAlias
 
                 if (((astypeElement != null && !(bindedResult is IPredefinedTypeReference)) ||
                      (asTypeMember != null && asTypeMember.IsStatic))
-                    && containedns == importedNs.QualifiedName)
+                    && containedns == qualifiedName)
                 {
                     var list = new List<string> {_suggestedName};
                     foreach (var typeParameterNumber in clrName.TypeNames)
@@ -129,7 +130,7 @@ namespace IntroduceNsAlias
             }
         }
 
-        private static void CallExtensionMethodsAsStatic(ITreeNode node, INamespace importedNs, CSharpElementFactory factory)
+        private static void CallExtensionMethodsAsStatic(ITreeNode node, CSharpElementFactory factory, string qualifiedName)
         {
             var targetsCollector = new TypeUsagesCollector(node, node.GetDocumentRange());
             var references = targetsCollector.Run();
@@ -148,7 +149,7 @@ namespace IntroduceNsAlias
                            .IfNotNull(t => t.GetContainingNamespace())
                            .IfNotNull(ns => ns.QualifiedName);
 
-                if (method != null && method.IsExtensionMethod() && containingNsQualifiedName == importedNs.QualifiedName)
+                if (method != null && method.IsExtensionMethod() && containingNsQualifiedName == qualifiedName)
                 {
                     var invocate = InvocationExpressionNavigator.GetByInvokedExpression(method);
                     //if (invocate == null) return null;
@@ -167,11 +168,6 @@ namespace IntroduceNsAlias
                     (replaceResult.InvokedExpression as IReferenceExpression).Reference.BindTo(declaredElement);
                 }
             }
-        }
-
-        protected override void ValueSelectedCallback(Hotspot oldHotspot)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

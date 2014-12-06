@@ -1,5 +1,4 @@
-using System.Reflection;
-using JetBrains.Application.PluginSupport;
+﻿using System.Reflection;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
@@ -14,9 +13,7 @@ using JetBrains.ProjectModel.model2.Assemblies;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.3.0.1")]
-//[assembly: AssemblyFileVersion("1.0.5.*")]
+[assembly: AssemblyVersion("1.4.0.4")]
+//[assembly: AssemblyFileVersion("1.4.0.4")]
 // The following information is displayed by ReSharper in the Plugins dialog
-[assembly: PluginTitle("Introduce Namespace Alias")]
-[assembly: PluginDescription("")]
-[assembly: PluginVendor("Alexander Ulitin")]
+

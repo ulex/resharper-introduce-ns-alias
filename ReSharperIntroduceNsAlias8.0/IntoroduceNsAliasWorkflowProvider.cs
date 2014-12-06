@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 
 using JetBrains.Application.DataContext;
+using JetBrains.ReSharper.Feature.Services.Refactorings;
 using JetBrains.ReSharper.Refactorings.Workflow;
 
 namespace IntroduceNsAlias
